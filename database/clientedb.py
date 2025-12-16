@@ -65,7 +65,7 @@ def actualizar_cliente(cliente_id, nombre, apellido, empresa, cargo, correo, num
     cursor = conn.cursor(cursor_factory=RealDictCursor)
 
     query = """
-        UPDATE contactos 
+        UPDATE clientes 
         SET nombre = %s, apellido = %s, empresa = %s, cargo = %s, 
             correo = %s, numero_telefono = %s, updated_at = CURRENT_TIMESTAMP
         WHERE id = %s
@@ -90,7 +90,7 @@ def eliminar_cliente(cliente_id):
         conn = getConnection()
         cursor = conn.cursor()
         
-        query = "DELETE FROM contactos WHERE id = %s"
+        query = "DELETE FROM clientes WHERE id = %s"
         cursor.execute(query, (cliente_id,))
         rows_deleted = cursor.rowcount
         conn.commit()
@@ -114,7 +114,7 @@ def registrar_llamada(cliente_id):
         cursor = conn.cursor(cursor_factory=RealDictCursor)
         
         query = """
-            UPDATE contactos 
+            UPDATE clientes 
             SET veces_contactado = veces_contactado + 1,
                 fecha_ultima_llamada = CURRENT_DATE,
                 updated_at = CURRENT_TIMESTAMP
@@ -145,7 +145,7 @@ def buscar_clientes(termino):
         cursor = conn.cursor(cursor_factory=RealDictCursor)
         
         query = """
-            SELECT * FROM contactos 
+            SELECT * FROM clientes 
             WHERE nombre ILIKE %s 
                OR apellido ILIKE %s 
                OR empresa ILIKE %s 

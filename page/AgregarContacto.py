@@ -2,7 +2,7 @@ import streamlit as st
 from database.clientedb import registrar_cliente
 
 def mostrar_formulario_agregar():
-    st.title("📝 Agregar Nuevo Contacto")
+    st.title("Registrar nuevo Contacto")
     st.markdown("---")
     
     # Crear formulario
@@ -47,7 +47,7 @@ def mostrar_formulario_agregar():
         
         # Botón de envío
         submitted = st.form_submit_button(
-            "✅ Guardar Contacto",
+            " Guardar Contacto",
             type="primary",
             use_container_width=True
         )
@@ -55,11 +55,11 @@ def mostrar_formulario_agregar():
         if submitted:
             # Validaciones
             if not nombre or not apellido:
-                st.error("❌ El nombre y apellido son obligatorios")
+                st.error(" El nombre y apellido son obligatorios")
                 return
             
             if not correo and not numero_telefono:
-                st.error("❌ Debe proporcionar al menos un correo o teléfono")
+                st.error(" Debe proporcionar al menos un correo o teléfono")
                 return
             
             # Intentar registrar
@@ -74,14 +74,14 @@ def mostrar_formulario_agregar():
                 )
             
             if resultado["success"]:
-                st.success(f"✅ Contacto registrado exitosamente! ID: {resultado['data']['id']}")
+                st.success(f" Contacto registrado exitosamente! ID: {resultado['data']['id']}")
                 st.balloons()
             else:
-                st.error(f"❌ Error al registrar: {resultado['error']}")
+                st.error(f" Error al registrar: {resultado['error']}")
     
     # Mostrar preview de datos
     st.markdown("---")
-    with st.expander("ℹ️ Información sobre los campos"):
+    with st.expander(" Información sobre los campos"):
         st.markdown("""
         - **Nombre y Apellido**: Identificación del contacto
         - **Empresa**: Organización a la que pertenece

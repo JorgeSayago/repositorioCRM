@@ -9,13 +9,13 @@ from database.clientedb import (
 from datetime import datetime
 
 def mostrar_lista_contactos():
-    st.title("📋 Lista de Contactos")
+    st.title(" Lista de Contactos")
     
     # Barra de búsqueda
     col1, col2 = st.columns([3, 1])
     with col1:
         busqueda = st.text_input(
-            "🔍 Buscar contacto", 
+            " Buscar contacto", 
             placeholder="Buscar por nombre, empresa, correo...",
             label_visibility="collapsed"
         )
@@ -32,25 +32,25 @@ def mostrar_lista_contactos():
         resultado = obtener_todos_clientes()
     
     if not resultado["success"]:
-        st.error(f"❌ Error al obtener contactos: {resultado['error']}")
+        st.error(f" Error al obtener contactos: {resultado['error']}")
         return
     
     contactos = resultado["data"]
     
     if not contactos:
-        st.info("📭 No hay contactos registrados en el sistema")
+        st.info(" No hay contactos registrados en el sistema")
         return
     
     # Métricas superiores
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.metric("📊 Total Contactos", len(contactos))
+        st.metric(" Total Contactos", len(contactos))
     with col2:
         total_llamadas = sum(c['veces_contactado'] for c in contactos)
-        st.metric("📞 Total Llamadas", total_llamadas)
+        st.metric("Total Llamadas", total_llamadas)
     with col3:
         con_llamadas = sum(1 for c in contactos if c['veces_contactado'] > 0)
-        st.metric("✅ Contactados", con_llamadas)
+        st.metric(" Contactados", con_llamadas)
     
     st.markdown("---")
     
@@ -60,22 +60,22 @@ def mostrar_lista_contactos():
             col1, col2, col3 = st.columns([3, 2, 1])
             
             with col1:
-                st.markdown(f"### 👤 {contacto['nombre']} {contacto['apellido']}")
+                st.markdown(f"###  {contacto['nombre']} {contacto['apellido']}")
                 if contacto['empresa']:
-                    st.markdown(f"**🏢 {contacto['empresa']}**")
+                    st.markdown(f"** {contacto['empresa']}**")
                 if contacto['cargo']:
-                    st.caption(f"💼 {contacto['cargo']}")
+                    st.caption(f" {contacto['cargo']}")
             
             with col2:
                 if contacto['correo']:
-                    st.text(f"📧 {contacto['correo']}")
+                    st.text(f" {contacto['correo']}")
                 if contacto['numero_telefono']:
-                    st.text(f"📞 {contacto['numero_telefono']}")
+                    st.text(f" {contacto['numero_telefono']}")
                 
                 if contacto['fecha_ultima_llamada']:
-                    st.caption(f"📅 Última llamada: {contacto['fecha_ultima_llamada']}")
+                    st.caption(f"Última llamada: {contacto['fecha_ultima_llamada']}")
                 else:
-                    st.caption("📅 Sin llamadas registradas")
+                    st.caption("Sin llamadas registradas")
             
             with col3:
                 st.metric(
@@ -91,40 +91,40 @@ def mostrar_lista_contactos():
                         registrar_llamada_accion(contacto)
                 
                 with btn_col2:
-                    if st.button("🗑️", key=f"delete_{contacto['id']}", help="Eliminar contacto"):
+                    if st.button("❌", key=f"delete_{contacto['id']}", help="Eliminar contacto"):
                         eliminar_contacto_accion(contacto)
             
             st.markdown("---")
     
     # Opción para exportar a CSV
-    if st.button("📥 Exportar a CSV"):
+    if st.button(" Exportar a CSV"):
         df = pd.DataFrame(contactos)
         csv = df.to_csv(index=False)
         st.download_button(
-            label="⬇️ Descargar CSV",
+            label=" Descargar CSV",
             data=csv,
             file_name=f"contactos_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
             mime="text/csv"
         )
 
-def registrar_llamada_accion(contacto):
+def registrar_llamada_accion(clientes):
     """Registra una llamada y muestra notificación"""
-    resultado = registrar_llamada(contacto['id'])
+    resultado = registrar_llamada(clientes['id'])
     if resultado["success"]:
-        st.success(f"✅ Llamada registrada para {contacto['nombre']} {contacto['apellido']}")
+        st.success(f"✅ Llamada registrada para {clientes['nombre']} {clientes['apellido']}")
         st.rerun()
     else:
         st.error(f"❌ Error: {resultado['error']}")
 
-def eliminar_contacto_accion(contacto):
+def eliminar_contacto_accion(clientes):
     """Elimina un contacto con confirmación"""
     if 'confirmar_eliminar' not in st.session_state:
         st.session_state.confirmar_eliminar = {}
     
-    contacto_id = contacto['id']
+    contacto_id = clientes['id']
     
     if contacto_id not in st.session_state.confirmar_eliminar:
-        st.warning(f"⚠️ ¿Está seguro de eliminar a {contacto['nombre']} {contacto['apellido']}?")
+        st.warning(f"⚠️ ¿Está seguro de eliminar a {clientes['nombre']} {clientes['apellido']}?")
         st.session_state.confirmar_eliminar[contacto_id] = True
     else:
         resultado = eliminar_cliente(contacto_id)
@@ -134,14 +134,3 @@ def eliminar_contacto_accion(contacto):
             st.rerun()
         else:
             st.error(f"❌ Error: {resultado['error']}")
-```
-
-## 4. Estructura de archivos:
-```
-tu_proyecto/
-├── database/
-│   ├── coneccion.py
-│   └── clientedb.py
-├── app.py                      ← Principal (ejecuta este)
-├── agregar_contacto_st.py      ← Formulario
-└── listar_contactos_st.py      ← Lista
